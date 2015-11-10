@@ -9,25 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-typedef void(^KIImagePagerImageRequestBlock)(UIImage*image, NSError * error);
-
 @class KIImagePager;
 
-#pragma mark  - Data source
-@protocol KIImagePagerDataSource <NSObject>
+@protocol KIImagePagerDataSource
 
 @required
-- (NSArray *) arrayWithImages:(KIImagePager*)pager;
-- (UIViewContentMode) contentModeForImage:(NSUInteger)image inPager:(KIImagePager*)pager;
+- (NSArray *) arrayWithImages;
+- (UIViewContentMode) contentModeForImage:(NSUInteger)image;
 
 @optional
-- (UIImage *) placeHolderImageForImagePager:(KIImagePager*)pager;
-- (NSString *) captionForImageAtIndex:(NSUInteger)index  inPager:(KIImagePager*)pager;
-- (UIViewContentMode) contentModeForPlaceHolder:(KIImagePager*)pager;
+- (UIImage *) placeHolderImageForImagePager;
 
 @end
 
-#pragma mark  - Delegate
 @protocol KIImagePagerDelegate <NSObject>
 
 @optional
@@ -36,43 +30,18 @@ typedef void(^KIImagePagerImageRequestBlock)(UIImage*image, NSError * error);
 
 @end
 
-#pragma mark  - Image source
-
-@protocol KIImagePagerImageSource <NSObject>
-
--(void) imageWithUrl:(NSURL*)url completion:(KIImagePagerImageRequestBlock)completion;
-
-@end
-
-
 @interface KIImagePager : UIView
 
-// Delegate and Datasource
 @property (weak) IBOutlet id <KIImagePagerDataSource> dataSource;
 @property (weak) IBOutlet id <KIImagePagerDelegate> delegate;
-@property (weak) IBOutlet id <KIImagePagerImageSource> imageSource;
 
+@property (assign) UIViewContentMode contentMode;
+@property (nonatomic, retain) UIPageControl *pageControl;
+@property (nonatomic, assign) BOOL indicatorDisabled;
+@property (assign) NSUInteger slideshowTimeInterval;
 
-// General
-@property (nonatomic) UIViewContentMode contentMode;
-@property (nonatomic) UIScrollView *scrollView;
-@property (nonatomic) UIPageControl *pageControl;
-@property (nonatomic) NSUInteger currentPage;
-@property (nonatomic) BOOL indicatorDisabled;
-@property (nonatomic) BOOL bounces;
-@property (nonatomic) BOOL imageCounterDisabled;
-@property (nonatomic) BOOL hidePageControlForSinglePages; // Defaults YES
-
-// Slideshow
-@property (nonatomic) NSUInteger slideshowTimeInterval; // Defaults 0.0f (off)
-@property (nonatomic) BOOL slideshowShouldCallScrollToDelegate; // Defaults YES
-
-// Caption Label
-@property (nonatomic, strong) UIColor *captionTextColor; // Defaults Black
-@property (nonatomic, strong) UIColor *captionBackgroundColor; // Defaults White (with an alpha of .7f)
-@property (nonatomic, strong) UIFont *captionFont; // Defaults to Helvetica 12.0f points
 
 - (void) reloadData;
-- (void) setCurrentPage:(NSUInteger)currentPage animated:(BOOL)animated;
 
 @end
+
